@@ -10,6 +10,7 @@ import DonutLargeIcon from '@material-ui/icons/DonutLarge';
 import ChatIcon from '@material-ui/icons/Chat'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import SearchIcon from '@material-ui/icons/Search'
+import ChatIntro from "./components/ChatIntro";
 
 
 
@@ -54,7 +55,8 @@ export default () => {
 
       </div>
       <div className="contentarea" >
-        ...
+        <ChatIntro />       
+  
       </div>
     
     </div>
