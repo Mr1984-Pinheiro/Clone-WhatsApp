@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import './ChatWindow.css'
 
 import MessageItem from "./MessageItem";
@@ -15,7 +15,9 @@ import EmojiPicker from "emoji-picker-react";
 
 
 
-export default () => {
+export default ({user}) => {
+
+    const body = useRef();
 
     let recognition = null;
     let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; 
@@ -26,7 +28,44 @@ export default () => {
     const [emojiOpen, setEmojiOpen] = useState(false);
     const [text, setText] = useState('');
     const [listening, setListening] = useState(false);
-    const [list, setList] = useState([{},{},{}]);
+    const [list, setList] = useState([
+         {author: 123, body: 'Bla Bad nks ks k s askd ks ka k sl ak sdk ks la k sk aks kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 1234,body: 'Bla Bad nkkiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 123, body: 'Bla Bad nks ks k s askd kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 1234,body: 'Bla Bad nkse dj v dhsiohd ' },
+         {author: 123, body: 'Bla Bad nks ks k dm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 1234, body: 'Bla Bad nks kijdskmc, dj v dhsiohd ' },
+         {author: 123, body: 'Bla Bad nks ks k s askd ks ka k sl ak sdk ks la k sk aks kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 1234,body: 'Bla Bad nkkiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 123, body: 'Bla Bad nks ks k s askd kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 1234,body: 'Bla Bad nkse dj v dhsiohd ' },
+         {author: 123, body: 'Bla Bad nks ks k dm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 1234, body: 'Bla Bad nks kijdskmc, dj v dhsiohd ' },
+         {author: 123, body: 'Bla Bad nks ks k s askd ks ka k sl ak sdk ks la k sk aks kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 1234,body: 'Bla Bad nkkiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 123, body: 'Bla Bad nks ks k s askd kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 1234,body: 'Bla Bad nkse dj v dhsiohd ' },
+         {author: 123, body: 'Bla Bad nks ks k dm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 1234, body: 'Bla Bad nks kijdskmc, dj v dhsiohd ' },
+         {author: 123, body: 'Bla Bad nks ks k s askd ks ka k sl ak sdk ks la k sk aks kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 1234,body: 'Bla Bad nkkiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 123, body: 'Bla Bad nks ks k s askd kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 1234,body: 'Bla Bad nkse dj v dhsiohd ' },
+         {author: 123, body: 'Bla Bad nks ks k dm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 1234, body: 'Bla Bad nks kijdskmc, dj v dhsiohd ' },
+         {author: 123, body: 'Bla Bad nks ks k s askd ks ka k sl ak sdk ks la k sk aks kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 1234,body: 'Bla Bad nkkiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 123, body: 'Bla Bad nks ks k s askd kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 1234,body: 'Bla Bad nkse dj v dhsiohd ' },
+         {author: 123, body: 'Bla Bad nks ks k dm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
+         {author: 1234, body: 'Bla Bad nks kijdskmc, dj v dhsiohd ' },
+    ]);
+
+    useEffect(()=>{
+        if (body.current.scrollHeight > body.current.offsetHeight) {
+            body.current.scrollTop = body.current.scrollHeight - body.current.offsetHeight;
+        }
+    }, []);
 
 
     const handleEmojiClick = (e, emojiObject)=>{
@@ -84,11 +123,12 @@ export default () => {
                 </div>
 
             </div>
-            <div className="chatWindow--body">
+            <div ref={body} className="chatWindow--body">
                 {list.map((item, key)=>(
                     <MessageItem 
                         key={key}
                         data={item}
+                        user={user}
                     />
                 ))}
             </div>
