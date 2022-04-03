@@ -12,6 +12,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert'
 import SearchIcon from '@material-ui/icons/Search'
 import ChatIntro from "./components/ChatIntro";
 import ChatWindow from"./components/ChatWindow"
+import NewChat from "./components/NewChat";
 
 
 
@@ -31,9 +32,22 @@ export default () => {
     name: 'Carlos Pinheiro'
   });
 
+  const [showNewChat, setShowNewChat] = useState(false);
+
+  const irParaNovaConversa = () => {
+    setShowNewChat(true);
+  }
+
   return(
     <div className="app-window" >
       <div className="sidebar" >
+
+        <NewChat
+            chatlist={chatList}
+            user={user}
+            show={showNewChat}
+            setShow={setShowNewChat}
+        />
         
           <header>
             <img className="header--avatar" src={user.avatar} alt="" />
@@ -41,7 +55,7 @@ export default () => {
               <div className="header--btn" >
                 <DonutLargeIcon style={{color: '#919191'}} />
               </div>
-              <div className="header--btn" >
+              <div onClick={irParaNovaConversa} className="header--btn" >
                 <ChatIcon style={{color: '#919191'}} />
               </div>
               <div className="header--btn" >
