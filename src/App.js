@@ -13,6 +13,7 @@ import SearchIcon from '@material-ui/icons/Search'
 import ChatIntro from "./components/ChatIntro";
 import ChatWindow from"./components/ChatWindow"
 import NewChat from "./components/NewChat";
+import Login from "./components/Login";
 
 
 
@@ -26,16 +27,25 @@ export default () => {
 
   ]);
   const [activeChat, setActiveChat] = useState({});
-  const [user, setUser] = useState({
-    id: 1234,
-    avatar: 'https://www.w3schools.com/howto/img_avatar2.png',
-    name: 'Carlos Pinheiro'
-  });
+  const [user, setUser] = useState(null);
 
   const [showNewChat, setShowNewChat] = useState(false);
 
   const irParaNovaConversa = () => {
     setShowNewChat(true);
+  }
+
+  const handleLoginData = async (u) => {
+    let newUser = {
+      id: u.uid,
+      name: u.displayName, 
+      avatar: u.photoURL
+    };
+    setUser(newUser);
+  }
+
+  if(user === null) {
+    return (<Login onReceive={handleLoginData} />);
   }
 
   return(
