@@ -53,5 +53,24 @@ export default {
                 with: user2.id
             })
         });
+
+        db.collection('users').doc(user2.id).update({
+            chats: firebase.firestore.FieldValue.arrayUnion({
+                chatId: newChat.id,
+                title: user.name,
+                image: user.avatar,
+                with: user.id
+            })
+        });
+    },
+    onChatList: (userId, setChatList) => {
+        return db.collection('users').doc(userId).onSnapshot((doc)=>{
+            if(doc.exists) {
+                let data = doc.data();
+                if(data.chats) {
+                    setChatList(data.chats);
+                }
+            }
+        });
     }
 };
