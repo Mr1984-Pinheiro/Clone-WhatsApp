@@ -11,11 +11,12 @@ import CloseIcon from '@material-ui/icons/Close'
 import SendIcon from '@material-ui/icons/Send'
 import MicIcon from '@material-ui/icons/Mic'
 import EmojiPicker from "emoji-picker-react";
+import Api from "../Api";
 
 
 
 
-export default ({user}) => {
+export default ({user, data}) => {
 
     const body = useRef();
 
@@ -28,44 +29,21 @@ export default ({user}) => {
     const [emojiOpen, setEmojiOpen] = useState(false);
     const [text, setText] = useState('');
     const [listening, setListening] = useState(false);
-    const [list, setList] = useState([
-         {author: 123, body: 'Bla Bad nks ks k s askd ks ka k sl ak sdk ks la k sk aks kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 1234,body: 'Bla Bad nkkiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 123, body: 'Bla Bad nks ks k s askd kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 1234,body: 'Bla Bad nkse dj v dhsiohd ' },
-         {author: 123, body: 'Bla Bad nks ks k dm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 1234, body: 'Bla Bad nks kijdskmc, dj v dhsiohd ' },
-         {author: 123, body: 'Bla Bad nks ks k s askd ks ka k sl ak sdk ks la k sk aks kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 1234,body: 'Bla Bad nkkiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 123, body: 'Bla Bad nks ks k s askd kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 1234,body: 'Bla Bad nkse dj v dhsiohd ' },
-         {author: 123, body: 'Bla Bad nks ks k dm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 1234, body: 'Bla Bad nks kijdskmc, dj v dhsiohd ' },
-         {author: 123, body: 'Bla Bad nks ks k s askd ks ka k sl ak sdk ks la k sk aks kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 1234,body: 'Bla Bad nkkiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 123, body: 'Bla Bad nks ks k s askd kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 1234,body: 'Bla Bad nkse dj v dhsiohd ' },
-         {author: 123, body: 'Bla Bad nks ks k dm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 1234, body: 'Bla Bad nks kijdskmc, dj v dhsiohd ' },
-         {author: 123, body: 'Bla Bad nks ks k s askd ks ka k sl ak sdk ks la k sk aks kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 1234,body: 'Bla Bad nkkiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 123, body: 'Bla Bad nks ks k s askd kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 1234,body: 'Bla Bad nkse dj v dhsiohd ' },
-         {author: 123, body: 'Bla Bad nks ks k dm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 1234, body: 'Bla Bad nks kijdskmc, dj v dhsiohd ' },
-         {author: 123, body: 'Bla Bad nks ks k s askd ks ka k sl ak sdk ks la k sk aks kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 1234,body: 'Bla Bad nkkiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 123, body: 'Bla Bad nks ks k s askd kdm aksdm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 1234,body: 'Bla Bad nkse dj v dhsiohd ' },
-         {author: 123, body: 'Bla Bad nks ks k dm skmdsieiud ddfojdoiofjie sodfijdskmc, dj v dhsiohd ' },
-         {author: 1234, body: 'Bla Bad nks kijdskmc, dj v dhsiohd ' },
-    ]);
+    const [list, setList] = useState([]);
+
+    
+
+    useEffect(()=>{       
+        setList([]);
+        let unsub = Api.onChatContent(data.chatId, setList);
+        return unsub;
+    }, [data.chatId]);
 
     useEffect(()=>{
         if (body.current.scrollHeight > body.current.offsetHeight) {
             body.current.scrollTop = body.current.scrollHeight - body.current.offsetHeight;
         }
-    }, []);
+    }, [list]);
 
 
     const handleEmojiClick = (e, emojiObject)=>{
@@ -97,17 +75,30 @@ export default ({user}) => {
         }
     }
 
-    const handleSendClick = () => {
-
+    const handleInputKeyUp = (e) => {
+        if (e.keyCode == 13) {
+            handleSendClick(); 
+        }
     }
+
+    const handleSendClick = () => {
+        if(text !== '') {
+            Api.sendMessage(data, user.id, 'text', text);
+            setText('');
+            setEmojiOpen(false);
+            
+        }
+    }
+
+
 
     return(
         <div className="chatWindow">
             <div className="chatWindow--header">
 
                 <div className="chatWindow--headerinfo">
-                    <img className="chatWindow--avatar" src="https://www.w3schools.com/howto/img_avatar2.png" alt="" />
-                    <div className="chatWindow--name">Carlos Eduardo</div>
+                    <img className="chatWindow--avatar" src= {data.image} alt="" />
+                    <div className="chatWindow--name"> {data.title} - {data.chatId}  </div>
                 </div>
                 
                 <div className="chatWindow--headerbuttons">
@@ -171,6 +162,7 @@ export default ({user}) => {
                     placeholder="Digite uma mensagem"
                     value={text}
                     onChange={e=>setText(e.target.value)}
+                    onKeyUp={handleInputKeyUp}
                      />
                 </div>
                 <div className="chatWindow--pos">
